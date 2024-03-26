@@ -31,6 +31,7 @@ enviarDatos.addEventListener("submit", (e)=>{
     e.preventDefault();
     //RECIBIR LOS DATOS DEL FORMULARIO
     var usuario={
+        id:document.getElementById("id").value,
         nombre:document.getElementById("nombre").value,
         usuario:document.getElementById("usuario").value,
         password:document.getElementById("password").value,
@@ -43,26 +44,36 @@ enviarDatos.addEventListener("submit", (e)=>{
         setTimeout(()=>{
             msj.innerHTML = "";
         },3000)  ;      
-    })
-    console.log("Recibiendo datos...");
+        console.log("Recibiendo datos...");
 
-    //REINICIAR EL FORMULARIO
-    document.getElementById("nombre").value="";
-    document.getElementById("usuario").value="";
-    document.getElementById("password").value="";
-    document.getElementById("nombre").focus();
+        //REINICIAR EL FORMULARIO
+        document.getElementById("id").value="";
+        document.getElementById("nombre").value="";
+        document.getElementById("usuario").value="";
+        document.getElementById("password").value="";
+        document.getElementById("nombre").focus();
+    });
+
 });
 
 //MODIFICAR UN REGISTRO DE MONGODB
 
 function editarUsuario(id){
     console.log(id);
+    socket.emit("clienteObtenerUsuarioPorID",id);
 }
+socket.on("servidorObtenerUsuarioPorID",(usuario)=>{
+    console.log(usuario);
+    document.getElementById("id").value=usuario._id;
+    document.getElementById("nombre").value=usuario.nombre;
+    document.getElementById("usuario").value=usuario.usuario;
+    document.getElementById("password").value=usuario.password;
+    document.getElementById("txtNuevoUsuario").innerHTML="Editar usuario";
+    document.getElementById("txtGuardarUsuario").innerHTML="Guardar cambios";
+});
 
-//ELIMINAR UN REGISTRO DE MONGODB
+// ELIMINAR UN REGISTRO DE MONGODB
 function borrarUsuario(id){
     console.log(id);
+    socket.emit("clienteBorrarUsuario", id);
 }
-
-//CAMBIAR FOMULARIOS
-

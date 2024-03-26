@@ -1,5 +1,4 @@
 //lado del cliente
-
 const socket = io();
 
 var msj = document.getElementById("mensaje");
@@ -31,6 +30,7 @@ enviarDatos.addEventListener("submit", (e)=>{
     e.preventDefault();
     //RECIBIR LOS DATOS DEL FORMULARIO
     var producto={
+        id:document.getElementById("id").value,
         nombre:document.getElementById("nombre").value,
         precio:document.getElementById("precio").value,
         cantidad:document.getElementById("cantidad").value,
@@ -47,6 +47,7 @@ enviarDatos.addEventListener("submit", (e)=>{
     console.log("Recibiendo datos...");
 
     //REINICIAR EL FORMULARIO
+    document.getElementById("id").value="";
     document.getElementById("nombre").value="";
     document.getElementById("precio").value="";
     document.getElementById("cantidad").value="";
@@ -55,14 +56,22 @@ enviarDatos.addEventListener("submit", (e)=>{
 
 //MODIFICAR UN REGISTRO DE MONGODB
 
-function editarUsuario(id){
+function editarProducto(id){
     console.log(id);
+    socket.emit("clienteObtenerProductoPorID",id);
 }
+socket.on("servidorObtenerProductoPorID",(producto)=>{
+    console.log(producto);
+    document.getElementById("id").value=producto._id;
+    document.getElementById("nombre").value=producto.nombre;
+    document.getElementById("precio").value=producto.precio;
+    document.getElementById("cantidad").value=producto.cantidad;
+    document.getElementById("txtNuevoProducto").innerHTML="Editar producto";
+    document.getElementById("txtGuardarProducto").innerHTML="Guardar cambios";
+});
 
-//ELIMINAR UN REGISTRO DE MONGODB
-function borrarUsuario(id){
+// ELIMINAR UN REGISTRO DE MONGODB
+function borrarProducto(id){
     console.log(id);
+    socket.emit("clienteBorrarProducto", id);
 }
-
-//CAMBIAR FOMULARIOS
-
